@@ -1,6 +1,7 @@
 package com.aditya.ratingsdataservice.controllers;
 
 import com.aditya.ratingsdataservice.models.Rating;
+import com.aditya.ratingsdataservice.models.UserRating;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,15 +18,18 @@ public class RatingDataController {
         return new Rating(movieId, "4");
     }
 
-    @RequestMapping("/{userId}")
-    public List<Rating> getRating(@PathVariable String userId) {
+    @RequestMapping("users/{userId}")
+    public UserRating getRating(@PathVariable String userId) {
 
         // Fetch rated movies by {userId} and return a list of Ratings.
-
         List<Rating> ratings = Arrays.asList(
                 new Rating("1", "4"),
                 new Rating("2", "4")
         );
-        return ratings;
+
+        UserRating userRating = new UserRating();
+        userRating.setRating(ratings);
+
+        return userRating;
     }
 }
