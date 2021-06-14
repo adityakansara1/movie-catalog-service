@@ -3,7 +3,7 @@ package com.aditya.movieinfoservice.controllers;
 import com.aditya.movieinfoservice.models.Movie;
 import com.aditya.movieinfoservice.models.MovieSummary;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +21,7 @@ public class MovieInfoController {
 
     @RequestMapping("/{movieId}")
     public Movie getmovieInfo(@PathVariable String movieId) {
-        final String url = "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=cea3b7a0b210db1ea9f3707365849dd8";
-        MovieSummary movieSummary = restTemplate.getForObject(url, MovieSummary.class);
+        MovieSummary movieSummary = restTemplate.getForObject("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=cea3b7a0b210db1ea9f3707365849dd8", MovieSummary.class);
         assert movieSummary != null;
         return new Movie(movieId, movieSummary.getTitle(), movieSummary.getOverview());
     }

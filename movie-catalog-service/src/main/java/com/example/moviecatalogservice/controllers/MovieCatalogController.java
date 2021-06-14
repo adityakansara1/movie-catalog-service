@@ -1,14 +1,13 @@
 package com.example.moviecatalogservice.controllers;
 
 import com.example.moviecatalogservice.models.CatalogItem;
-import com.example.moviecatalogservice.models.Movie;
 import com.example.moviecatalogservice.models.UserRating;
+import com.example.moviecatalogservice.services.GetCatalogService;
+import com.example.moviecatalogservice.services.GetRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,19 +17,22 @@ import java.util.stream.Collectors;
 public class MovieCatalogController {
 
     @Autowired
-    private RestTemplate restTemplate;
+    private GetCatalogService getCatalogService;
 
     @Autowired
-    private WebClient.Builder webClientBuilder;
+    private GetRatingService getRatingService;
 
     @RequestMapping("/{userId}")
     public List<CatalogItem> getCatalog(@PathVariable String userId) {
 
-        UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratings/users/" + userId, UserRating.class);
+        UserRating ratings = getRatingService.getUserRating(userId);
 
         assert ratings != null;
-        return ratings.getRating().stream().map(rating -> {
-            Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
+        return ratings.getRating().stream().map(rating -> getCatalogService.getCatalogItem(rating))
+                .collect(Collectors.toList());
+    }
+
+}
 
 //            Movie movie = webClientBuilder.build()
 //                    .get()
@@ -38,10 +40,3 @@ public class MovieCatalogController {
 //                    .retrieve()
 //                    .bodyToMono(Movie.class)
 //                    .block(); // "block()" method is for making this call synchronous.
-
-            assert movie != null;
-            return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating());
-        })
-                .collect(Collectors.toList());
-    }
-}
