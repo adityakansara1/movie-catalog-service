@@ -23,8 +23,8 @@ public class RatingDataController {
 
         // Fetch rated movies by {userId} and return a list of Ratings.
         List<Rating> ratings = Arrays.asList(
-                new Rating("1", "4"),
-                new Rating("2", "4")
+                new Rating("100", "4"),
+                new Rating("200", "4")
         );
 
         UserRating userRating = new UserRating();

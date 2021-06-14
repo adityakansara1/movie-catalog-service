@@ -40,7 +40,7 @@ public class MovieCatalogController {
 //                    .block(); // "block()" method is for making this call synchronous.
 
             assert movie != null;
-            return new CatalogItem(movie.getName(), "desc", rating.getRating());
+            return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating());
         })
                 .collect(Collectors.toList());
     }
